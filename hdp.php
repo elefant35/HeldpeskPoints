@@ -2,6 +2,7 @@
 //Globals-----------------------------
 $Wurl="https://hooks.slack.com/services/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";
 $text = explode(' ', $_POST['text']);
+$Filename = 'points.csv';
 //functions---------------------------
 function sendPackage($data, $Wurl){
         $ch = curl_init($Wurl);
@@ -29,17 +30,39 @@ function plusplus($text){
 	}
 	return $words;
 }
+function subtract(&$csvi,$file, $name)
+{
+	 foreach($csv as &$acsv){
+                if( $acsv['name'] == $name){
+                        $acsv['points'] = $acsv['points'] - $amount;
+                }
+        }
+        $fp = fopen($Filename, 'w');
+        fputs($fp,"name,points\n");
+        foreach($csv as $row){
+                fputcsv($fp, $row);
+        }
+        fclose($fp);
+
+
+
+}
 //main------------------------------------
+//ready file-----------------------------
+$csv = array_map('str_getcsv', file($Filename));
+array_walk($csv, function(&$a) use ($csv){
+        $a = array_combine($csv[0],$a);
+});
+array_shift($csv);
 
 //Verify token
 $token = $_POST['token'];
 if($token !='KvEAVM3BF3ox2SRfjHuUw0J8'){
         echo ('<img src= http://vignette1.wikia.nocookie.net/muppet/images/5/5b/Oscar-can.png/revision/latest?cb=20120117061845>');
-/*$test3 = explode(' ', "hello tac4++ ashea++");
-$test2 = plusplus($test3);
-	$test4 = substr('tac4++',-2);
-	echo($test4);
-	echo($test2);*/
+/*	$blah = explode(' ', "hello my name is tac4++");
+	$test = plusplus($blah);
+	echo($test);*/
+
         die("Go Away");
 }
 
@@ -49,7 +72,7 @@ $data = makePackage($test);
 sendPackage($data, $Wurl);
 
 
-echo("$text");
+echo($test);
 
 
 ?>
